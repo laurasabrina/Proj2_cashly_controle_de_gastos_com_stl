@@ -77,7 +77,7 @@ O cashly terá um menu com as seguintes opções:
 ## Exemplo de uso
 
 IN
-
+`
 CADASTRAR_CATEGORIA Alimentação 500.00
 CADASTRAR_CATEGORIA Transporte 200.00
 CADASTRAR_CATEGORIA Lazer 150.00
@@ -86,12 +86,13 @@ REGISTRAR_GASTO 14/09/2026 supermercado 127.85 Alimentação
 REGISTRAR_GASTO 12/10/2026 combustível 200.00 Transporte
 CONSULTAR_TOTAL_POR_CATEGORIA 10 2026
 FIM
-
+`
 
 OUT
 
+`
 Resumo de Gastos - Outubro/2026
-
 Transporte ----------- R$ 200.00 (Limite: R$ 200.00)
 Alimentação ---------- R$ 45.90  (Limite: R$ 500.00)
 Lazer ---------------- R$ 0.00   (Limite: R$ 150.00)
+`
