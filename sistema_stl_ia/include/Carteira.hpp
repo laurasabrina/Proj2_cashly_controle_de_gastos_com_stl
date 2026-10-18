@@ -3,6 +3,7 @@
 
 #include <map>
 #include <string>
+#include <vector>
 
 #include "Categoria.hpp"
 #include "Gasto.hpp"
@@ -24,8 +25,12 @@ public:
 
     int cadastrarCategoria(const string& nome, double limite);
     const map<string, Categoria>& listarCategorias() const;
+    int registrarGasto(const string& data, const string& descricao,
+                       const string& valorTexto, const string& categoria);
+    int ultimoId() const;
 
 private:
+    vector<Gasto> gastos;
     map<string, Categoria> categorias;
     int proximoId;
 };
