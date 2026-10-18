@@ -12,6 +12,7 @@ void mostrarMenu() {
     cout << "===== Cashly =====" << endl;
     cout << "01. cadastrar categoria" << endl;
     cout << "02. listar categorias" << endl;
+    cout << "03. registrar gasto" << endl;
     cout << "00. sair" << endl;
     cout << "Escolha uma opcao: ";
 }
@@ -69,6 +70,37 @@ void opcaoListarCategorias(Carteira& carteira) {
     }
 }
 
+void opcaoRegistrarGasto(Carteira& carteira) {
+    string data;
+    string descricao;
+    string valorTexto;
+    string categoria;
+
+    cout << "Digite a data: ";
+    getline(cin, data);
+    cout << "Digite a descrição: ";
+    getline(cin, descricao);
+    cout << "Digite o valor: ";
+    getline(cin, valorTexto);
+    cout << "Digite a categoria: ";
+    getline(cin, categoria);
+
+    int codigo = carteira.registrarGasto(data, descricao, valorTexto,
+                                         categoria);
+    if (codigo == Carteira::CATEGORIA_INEXISTENTE) {
+        cout << "Categoria Inexistente!" << endl;
+    } else if (codigo == Carteira::DESCRICAO_VAZIA) {
+        cout << "Descrição vazia!" << endl;
+    } else if (codigo == Carteira::DATA_INVALIDA) {
+        cout << "Data inválida!" << endl;
+    } else if (codigo == Carteira::VALOR_INVALIDO) {
+        cout << "Valor inválido!" << endl;
+    } else {
+        cout << "Gasto registrado com o id " << carteira.ultimoId()
+             << "!" << endl;
+    }
+}
+
 int main() {
     Carteira carteira;
     string opcao;
@@ -87,6 +119,8 @@ int main() {
             opcaoCadastrarCategoria(carteira);
         } else if (opcao == "02") {
             opcaoListarCategorias(carteira);
+        } else if (opcao == "03") {
+            opcaoRegistrarGasto(carteira);
         } else if (opcao == "00") {
             cout << "Ate logo!" << endl;
             break;
