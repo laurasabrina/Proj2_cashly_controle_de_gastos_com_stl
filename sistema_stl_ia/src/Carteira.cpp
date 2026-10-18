@@ -1,5 +1,6 @@
 #include "Carteira.hpp"
 
+#include <algorithm>
 #include <sstream>
 
 Carteira::Carteira() : proximoId(1) {
@@ -54,6 +55,20 @@ int Carteira::registrarGasto(const string& data, const string& descricao,
     gastos.push_back(gasto);
     proximoId++;
     return OK;
+}
+
+const vector<Gasto>& Carteira::listarGastos() const {
+    return gastos;
+}
+
+bool Carteira::excluirGasto(int id) {
+    Gasto procurado(id);
+    vector<Gasto>::iterator it = find(gastos.begin(), gastos.end(), procurado);
+    if (it == gastos.end()) {
+        return false;
+    }
+    gastos.erase(it);
+    return true;
 }
 
 int Carteira::ultimoId() const {
