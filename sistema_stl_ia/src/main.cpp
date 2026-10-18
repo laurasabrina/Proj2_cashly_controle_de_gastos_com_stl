@@ -13,6 +13,8 @@ void mostrarMenu() {
     cout << "01. cadastrar categoria" << endl;
     cout << "02. listar categorias" << endl;
     cout << "03. registrar gasto" << endl;
+    cout << "04. listar gastos" << endl;
+    cout << "09. excluir gasto" << endl;
     cout << "00. sair" << endl;
     cout << "Escolha uma opcao: ";
 }
@@ -101,6 +103,48 @@ void opcaoRegistrarGasto(Carteira& carteira) {
     }
 }
 
+void opcaoListarGastos(Carteira& carteira) {
+    const vector<Gasto>& gastos = carteira.listarGastos();
+    if (gastos.empty()) {
+        cout << "Nenhum gasto registrado" << endl;
+        return;
+    }
+
+    cout << fixed << setprecision(2);
+    for (vector<Gasto>::size_type i = 0; i < gastos.size(); ++i) {
+        const Gasto& gasto = gastos[i];
+        cout << gasto.getId() << " | " << gasto.getData() << " | "
+             << gasto.getDescricao() << " | R$ " << gasto.getValor()
+             << " | " << gasto.getCategoria() << endl;
+    }
+}
+
+void opcaoExcluirGasto(Carteira& carteira) {
+    string idTexto;
+
+    cout << "Digite o id do gasto: ";
+    getline(cin, idTexto);
+
+    istringstream stream(idTexto);
+    int id = 0;
+    stream >> id;
+    if (stream.fail() || id <= 0) {
+        cout << "Nenhum gasto encontrado com esse id!" << endl;
+        return;
+    }
+    stream >> ws;
+    if (!stream.eof()) {
+        cout << "Nenhum gasto encontrado com esse id!" << endl;
+        return;
+    }
+
+    if (carteira.excluirGasto(id)) {
+        cout << "Gasto excluído com sucesso!" << endl;
+    } else {
+        cout << "Nenhum gasto encontrado com esse id!" << endl;
+    }
+}
+
 int main() {
     Carteira carteira;
     string opcao;
@@ -121,6 +165,10 @@ int main() {
             opcaoListarCategorias(carteira);
         } else if (opcao == "03") {
             opcaoRegistrarGasto(carteira);
+        } else if (opcao == "04") {
+            opcaoListarGastos(carteira);
+        } else if (opcao == "09") {
+            opcaoExcluirGasto(carteira);
         } else if (opcao == "00") {
             cout << "Ate logo!" << endl;
             break;
