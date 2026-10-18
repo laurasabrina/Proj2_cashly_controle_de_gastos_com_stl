@@ -24,7 +24,7 @@ O sistema possui três classes principais: Gasto, Categorias e Carteira.
 `Carteira` representa o "gerenciador" do sistema. É a parte responsável por armazenar os gastos e categorias cadastradas, além de realizar os cálculos e gerar os relatórios.
 
 - gastos (`vector<Gasto>`) - coleção de gastos registrados pelo usuário;
-- categorias (`vector<Categorias>`) - coleção de categorias cadastradas;
+- categorias (`map<string, Categoria>`) - coleção de categorias cadastradas, em que a chave é o nome da categoria.
 
 ## O que dá para fazer
 
@@ -53,12 +53,12 @@ O Cashly terá um menu enumerado, lido da entrada padrão. Cada opção pede os 
 - os totais por categoria devem considerar apenas os gastos do mês e do ano selecionado;
 - os maiores gastos do mês serão apresentados em ordem decrescente de valor. Em caso de empate, serão ordenados pela data, do mais recente para o mais antigo;
 - uma categoria será considerada acima do limite somente quando o total mensal de gastos for maior que o limite definido. Se o total for igual ao limite, ela não será considerada ultrapassada;
-- ao alterar um limite, os gastos já registrados não serão modificados; apenas as consultas futuras utilizarão o novo limite.
+-  ao alterar um limite, os gastos já registrados não serão modificados; apenas as consultas futuras utilizarão o novo limite.
 - os gastos de meses diferentes devem ser contabilizados separadamente, mesmo quando pertecem à mesma categoria;
 - a data é obrigatoriamente no formato DD/MM/AAAA e deve existir no calendário;
 - a descrição do gasto não pode ser vazia e pode conter espaços;           
-- o valor aceita apenas ponto como separador decimal (ex.: 45.90);vírgula ou texto inválido recusam o registro; 
-- na busca e na comparação de nomes de categoria não importam maiúsculas nem acentos: "Alimentação", "ALIMENTACAO" e "alimentação" são a mesma categoria — isso vale também para detectar duplicidade;  
+- o valor aceita apenas ponto como separador decimal (ex.: 45.90);vírgula ou texto inválido recusam o registro;                            
+- na busca e na comparação de nomes de categoria não importam maiúsculas nem acentos: "Alimentação", "ALIMENTACAO" e "alimentação" são a mesma categoria — isso vale também para detectar duplicidade;                  
 - na consulta total por categoria, as categorias saem em ordem alfabética e todas aparecem, mesmo com total zerozero;                       
 - ao excluir um gasto, o identificador não é reutilizado;                  
 - o aviso de categoria acima do limite aparece após registrar um gasto que estourou o limite e também na opção 07. 
@@ -118,3 +118,10 @@ Alimentação ---------- R$ 45.90  (Limite: R$ 500.00)
 Lazer ---------------- R$ 0.00   (Limite: R$ 150.00)                       
 Transporte ----------- R$ 200.00 (Limite: R$ 200.00) 
 ```
+
+## Uso da STL (apenas para dos requisitos)
+
+- `map<string, Categoria>` guarda as categorias da carteira, com o nome normalizado como chave — impede duplicidade, permite buscar por nome e entrega a listagem em ordem alfabética; 
+- `set<string>` reúne, dentro do relatório da opção 06, os nomes das categorias que tiveram gasto no mês — não repete e sai em ordem alfabética; 
+- `sort` ordena os maiores gastos do mês usando o `operator<` do `Gasto`; 
+- `find` localiza o gasto a excluir usando o `operator==` do `Gasto`.
