@@ -29,6 +29,7 @@ public:
                        const string& valorTexto, const string& categoria);
     const vector<Gasto>& listarGastos() const;
     bool excluirGasto(int id);
+    map<string, double> totaisDoMes(int mes, int ano) const;
     int ultimoId() const;
 
 private:
