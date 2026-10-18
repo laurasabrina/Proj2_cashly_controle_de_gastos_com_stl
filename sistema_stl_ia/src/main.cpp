@@ -1,47 +1,99 @@
+#include <cstdlib>
+#include <iomanip>
 #include <iostream>
+#include <sstream>
+#include <string>
 
-#include "Categoria.hpp"
-#include "Gasto.hpp"
+#include "Carteira.hpp"
 
 using namespace std;
 
+void mostrarMenu() {
+    cout << "===== Cashly =====" << endl;
+    cout << "01. cadastrar categoria" << endl;
+    cout << "02. listar categorias" << endl;
+    cout << "00. sair" << endl;
+    cout << "Escolha uma opcao: ";
+}
+
+bool lerDouble(const string& texto, double& valor) {
+    istringstream stream(texto);
+    stream >> valor;
+    if (stream.fail()) {
+        return false;
+    }
+    stream >> ws;
+    return stream.eof();
+}
+
+void opcaoCadastrarCategoria(Carteira& carteira) {
+    string nome;
+    string limiteTexto;
+
+    cout << "Digite o nome da categoria: ";
+    getline(cin, nome);
+    cout << "Digite o limite mensal: ";
+    getline(cin, limiteTexto);
+
+    double limite = 0.0;
+    if (!lerDouble(limiteTexto, limite)) {
+        cout << "Limite inválido!" << endl;
+        return;
+    }
+
+    int codigo = carteira.cadastrarCategoria(nome, limite);
+    if (codigo == Carteira::NOME_VAZIO) {
+        cout << "Nome de categoria vazio!" << endl;
+    } else if (codigo == Carteira::LIMITE_INVALIDO) {
+        cout << "Limite inválido!" << endl;
+    } else if (codigo == Carteira::CATEGORIA_DUPLICADA) {
+        cout << "Categoria já cadastrada!" << endl;
+    } else {
+        cout << "Categoria cadastrada com sucesso!" << endl;
+    }
+}
+
+void opcaoListarCategorias(Carteira& carteira) {
+    const map<string, Categoria>& categorias = carteira.listarCategorias();
+    if (categorias.empty()) {
+        cout << "Nenhuma categoria registrada" << endl;
+        return;
+    }
+
+    cout << "Categorias cadastradas:" << endl;
+    map<string, Categoria>::const_iterator it;
+    for (it = categorias.begin(); it != categorias.end(); ++it) {
+        cout << fixed << setprecision(2);
+        cout << it->second.getNome() << " - Limite: R$ "
+             << it->second.getLimite() << endl;
+    }
+}
+
 int main() {
-    cout << "--- Teste dataValida ---" << endl;
-    cout << "29/02/2024: " << Gasto::dataValida("29/02/2024") << endl;
-    cout << "31/02/2026: " << Gasto::dataValida("31/02/2026") << endl;
-    cout << "12/10/2026: " << Gasto::dataValida("12/10/2026") << endl;
-    cout << "abc:        " << Gasto::dataValida("abc") << endl;
-    cout << "32/01/2026: " << Gasto::dataValida("32/01/2026") << endl;
-    cout << "15/13/2026: " << Gasto::dataValida("15/13/2026") << endl;
+    Carteira carteira;
+    string opcao;
 
-    cout << endl << "--- Teste normalizar ---" << endl;
-    cout << "Alimentacao -> " << Categoria::normalizar("Alimentação") << endl;
-    cout << "ALIMENTAÇÃO -> " << Categoria::normalizar("ALIMENTAÇÃO") << endl;
-    cout << "Saúde -> " << Categoria::normalizar("Saúde") << endl;
+    while (true) {
+        mostrarMenu();
+        getline(cin, opcao);
+        if (!cin) {
+            break;
+        }
+        if (opcao.size() == 1) {
+            opcao = "0" + opcao;
+        }
 
-    cout << endl << "--- Teste operadores do Gasto ---" << endl;
-    Gasto g1(1, "12/10/2026", "almoço", 45.90, "Alimentação");
-    Gasto g2(2, "15/10/2026", "mercado", 200.00, "Alimentação");
-    Gasto g3(3, "14/10/2026", "combustível", 45.90, "Transporte");
-    Gasto g1Copia(1);
-
-    cout << "g1 == g1Copia (mesmo id): " << (g1 == g1Copia) << endl;
-    cout << "g1 == g2 (ids diferentes): " << (g1 == g2) << endl;
-    cout << "g1 < g2 (45.90 < 200.00): " << (g1 < g2) << endl;
-    cout << "g2 < g1: " << (g2 < g1) << endl;
-    cout << "g3 < g1 (mesmo valor, g3 mais recente): " << (g3 < g1) << endl;
-
-    cout << endl << "--- Teste getters ---" << endl;
-    cout << "g2 id=" << g2.getId() << " data=" << g2.getData()
-         << " descricao=" << g2.getDescricao()
-         << " valor=" << g2.getValor()
-         << " categoria=" << g2.getCategoria() << endl;
-
-    cout << endl << "--- Teste Categoria ---" << endl;
-    Categoria cat("Alimentação", 500.00);
-    cout << "nome=" << cat.getNome() << " limite=" << cat.getLimite() << endl;
-    cat.setLimite(600.00);
-    cout << "depois de setLimite(600): limite=" << cat.getLimite() << endl;
+        if (opcao == "01") {
+            opcaoCadastrarCategoria(carteira);
+        } else if (opcao == "02") {
+            opcaoListarCategorias(carteira);
+        } else if (opcao == "00") {
+            cout << "Ate logo!" << endl;
+            break;
+        } else {
+            cout << "Opção inválida!" << endl;
+        }
+    }
 
     return 0;
 }
