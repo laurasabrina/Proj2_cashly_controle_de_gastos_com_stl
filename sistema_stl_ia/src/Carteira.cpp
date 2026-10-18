@@ -3,6 +3,17 @@
 #include <algorithm>
 #include <sstream>
 
+// Auxiliares que existem só neste arquivo: pegam o mês e o ano de uma
+// data "DD/MM/AAAA" (a data já passou pela dataValida no registro).
+static int extrairMes(const string& data) {
+    return (data[3] - '0') * 10 + (data[4] - '0');
+}
+
+static int extrairAno(const string& data) {
+    return (data[6] - '0') * 1000 + (data[7] - '0') * 100
+         + (data[8] - '0') * 10 + (data[9] - '0');
+}
+
 Carteira::Carteira() : proximoId(1) {
 }
 
@@ -73,4 +84,26 @@ bool Carteira::excluirGasto(int id) {
 
 int Carteira::ultimoId() const {
     return proximoId - 1;
+}
+
+map<string, double> Carteira::totaisDoMes(int mes, int ano) const {
+    map<string, double> totais;
+    map<string, Categoria>::const_iterator cat;
+    for (cat = categorias.begin(); cat != categorias.end(); ++cat) {
+        double total = 0.0;
+        for (vector<Gasto>::size_type i = 0; i < gastos.size(); ++i) {
+            const Gasto& gasto = gastos[i];
+            if (extrairMes(gasto.getData()) != mes) {
+                continue;
+            }
+            if (extrairAno(gasto.getData()) != ano) {
+                continue;
+            }
+            if (Categoria::normalizar(gasto.getCategoria()) == cat->first) {
+                total += gasto.getValor();
+            }
+        }
+        totais[cat->second.getNome()] = total;
+    }
+    return totais;
 }
