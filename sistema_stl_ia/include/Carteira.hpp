@@ -27,6 +27,8 @@ public:
     const map<string, Categoria>& listarCategorias() const;
     int registrarGasto(const string& data, const string& descricao,
                        const string& valorTexto, const string& categoria);
+    const vector<Gasto>& listarGastos() const;
+    bool excluirGasto(int id);
     int ultimoId() const;
 
 private:
