@@ -14,6 +14,7 @@ void mostrarMenu() {
     cout << "02. listar categorias" << endl;
     cout << "03. registrar gasto" << endl;
     cout << "04. listar gastos" << endl;
+    cout << "05. consultar total por categoria" << endl;
     cout << "09. excluir gasto" << endl;
     cout << "00. sair" << endl;
     cout << "Escolha uma opcao: ";
@@ -27,6 +28,37 @@ bool lerDouble(const string& texto, double& valor) {
     }
     stream >> ws;
     return stream.eof();
+}
+
+bool lerInteiro(const string& texto, int& valor) {
+    istringstream stream(texto);
+    stream >> valor;
+    if (stream.fail()) {
+        return false;
+    }
+    stream >> ws;
+    return stream.eof();
+}
+
+// Conta caracteres de verdade (não bytes): "Alimentação" tem 11 caracteres,
+// mas 13 bytes, porque ç e ã ocupam 2 bytes no UTF-8.
+int contarCaracteres(const string& texto) {
+    int total = 0;
+    for (string::size_type i = 0; i < texto.size(); ++i) {
+        unsigned char c = texto[i];
+        if ((c & 0xC0) != 0x80) {
+            total++;
+        }
+    }
+    return total;
+}
+
+string nomeMes(int mes) {
+    static const char* nomes[] = {"Janeiro", "Fevereiro", "Março", "Abril",
+                                  "Maio", "Junho", "Julho", "Agosto",
+                                  "Setembro", "Outubro", "Novembro",
+                                  "Dezembro"};
+    return nomes[mes - 1];
 }
 
 void opcaoCadastrarCategoria(Carteira& carteira) {
@@ -119,6 +151,75 @@ void opcaoListarGastos(Carteira& carteira) {
     }
 }
 
+void opcaoTotalPorCategoria(Carteira& carteira) {
+    if (carteira.listarCategorias().empty()) {
+        cout << "Nenhuma categoria registrada" << endl;
+        return;
+    }
+
+    int mes = 0;
+    int ano = 0;
+    while (true) {
+        string mesTexto;
+        string anoTexto;
+
+        cout << "Digite o mês: ";
+        getline(cin, mesTexto);
+        cout << "Digite o ano: ";
+        getline(cin, anoTexto);
+        if (!cin) {
+            return;
+        }
+
+        if (lerInteiro(mesTexto, mes) && lerInteiro(anoTexto, ano)
+                && mes >= 1 && mes <= 12 && ano >= 1) {
+            break;
+        }
+
+        cout << "Opção inválida!" << endl;
+        cout << "Deseja digitar um valor válido? (s/n): ";
+        string resposta;
+        getline(cin, resposta);
+        if (!cin) {
+            return;
+        }
+        if (resposta != "s" && resposta != "S") {
+            return;
+        }
+    }
+
+    map<string, double> totais = carteira.totaisDoMes(mes, ano);
+    const map<string, Categoria>& categorias = carteira.listarCategorias();
+
+    double soma = 0.0;
+    map<string, double>::const_iterator it;
+    for (it = totais.begin(); it != totais.end(); ++it) {
+        soma += it->second;
+    }
+
+    cout << endl;
+    cout << "Resumo de Gastos - " << nomeMes(mes) << "/" << ano << endl;
+    cout << endl;
+    if (soma == 0.0) {
+        cout << "Nenhum gasto registrado no período selecionado" << endl;
+        return;
+    }
+
+    cout << fixed << setprecision(2);
+    for (it = totais.begin(); it != totais.end(); ++it) {
+        int caracteres = contarCaracteres(it->first);
+        cout << it->first << " ";
+        for (int i = caracteres; i < 21; ++i) {
+            cout << "-";
+        }
+
+        map<string, Categoria>::const_iterator achou =
+            categorias.find(Categoria::normalizar(it->first));
+        cout << " R$ " << left << setw(7) << it->second << right
+             << "(Limite: R$ " << achou->second.getLimite() << ")" << endl;
+    }
+}
+
 void opcaoExcluirGasto(Carteira& carteira) {
     string idTexto;
 
@@ -167,6 +268,8 @@ int main() {
             opcaoRegistrarGasto(carteira);
         } else if (opcao == "04") {
             opcaoListarGastos(carteira);
+        } else if (opcao == "05") {
+            opcaoTotalPorCategoria(carteira);
         } else if (opcao == "09") {
             opcaoExcluirGasto(carteira);
         } else if (opcao == "00") {
