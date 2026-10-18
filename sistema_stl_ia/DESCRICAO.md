@@ -28,15 +28,15 @@ O sistema possui três classes principais: Gasto, Categorias e Carteira.
 
 ## O que dá para fazer
 
-O cashly terá um menu com as seguintes opções:
+O Cashly terá um menu enumerado, lido da entrada padrão. Cada opção pede os seus dados um por vez. Exemplo de uso na seção final. 
 
 01. cadastrar categoria - solicita o nome da categoria e o limite mensal de gasto;
 02. listar categorias - mostra as categorias cadastradas e seus respectivos limites mensais;
 03. registrar gasto - solicita a data, descrição, valor e categoria. O id é associado automaticamente a cada resgistro;
 04. listar gastos - exibe os gastos registrados;
 05. consultar total por categoria - solicita o mês e o ano e mostra quanto foi gasto em cada categoria no período definido;
-06. listar maiores gastos do mês - solicita mês e ano e exibe os maiores gastos por categorias em ordem decrescente;
-07. verificar limites - mostra as categorias e os respectivos limites com os tanto que tem disponível e quanto já foi utilizado;
+06. listar maiores gastos do mês - solicita mês e ano e mostra os gastos agrupados por categoria, em ordem alfabética de categoria;    dentro de cada categoria, os gastos do maior para o menor valor, com empate resolvido pela data mais recente. Só aparecem categorias que   tiveram gasto no mês;
+07. verificar limites - solicita mês e ano e mostra as categorias e os respectivos limites com os tanto que tem disponível e quanto já foi utilizado;
 08. alterar limite - permite modificar o limite mensal de uma categoria existente;
 09. excluir gasto - permite remover um gasto registrados a partit do seu identificador;
 00. sair - encerra o sistema.
@@ -52,9 +52,16 @@ O cashly terá um menu com as seguintes opções:
 - os valores serão exibidos com duas casas decimais;
 - os totais por categoria devem considerar apenas os gastos do mês e do ano selecionado;
 - os maiores gastos do mês serão apresentados em ordem decrescente de valor. Em caso de empate, serão ordenados pela data, do mais recente para o mais antigo;
-- uma categoria será considerada acima do limite somente quando o total mensal de gastos for maior que o limite definido. Se o total for igual ao limite, ela não será considerada ultrapassada.
--  ao alterar um limite, os gastos já registrados não serão modificados; apenas as consultas futuras utilizarão o novo limite.
-- os gastos de meses diferentes devem ser contabilizados separadamente, mesmo quando pertecem à mesma categoria. 
+- uma categoria será considerada acima do limite somente quando o total mensal de gastos for maior que o limite definido. Se o total for igual ao limite, ela não será considerada ultrapassada;
+- ao alterar um limite, os gastos já registrados não serão modificados; apenas as consultas futuras utilizarão o novo limite.
+- os gastos de meses diferentes devem ser contabilizados separadamente, mesmo quando pertecem à mesma categoria;
+- a data é obrigatoriamente no formato DD/MM/AAAA e deve existir no calendário;
+- a descrição do gasto não pode ser vazia e pode conter espaços;           
+- o valor aceita apenas ponto como separador decimal (ex.: 45.90);vírgula ou texto inválido recusam o registro; 
+- na busca e na comparação de nomes de categoria não importam maiúsculas nem acentos: "Alimentação", "ALIMENTACAO" e "alimentação" são a mesma categoria — isso vale também para detectar duplicidade;  
+- na consulta total por categoria, as categorias saem em ordem alfabética e todas aparecem, mesmo com total zerozero;                       
+- ao excluir um gasto, o identificador não é reutilizado;                  
+- o aviso de categoria acima do limite aparece após registrar um gasto que estourou o limite e também na opção 07. 
 
 ## Quando algo dá errado
 
@@ -76,24 +83,38 @@ O cashly terá um menu com as seguintes opções:
 
 ## Exemplo de uso
 
-IN
+IN                                                                    
 ```
-CADASTRAR_CATEGORIA Alimentação 500.00
-CADASTRAR_CATEGORIA Transporte 200.00
-CADASTRAR_CATEGORIA Lazer 150.00
-REGISTRAR_GASTO 12/10/2026 almoço 45.90 Alimentação
-REGISTRAR_GASTO 14/09/2026 supermercado 127.85 Alimentação
-REGISTRAR_GASTO 12/10/2026 combustível 200.00 Transporte
-CONSULTAR_TOTAL_POR_CATEGORIA 10 2026
-FIM
-```
+1
+Alimentação           
+500.00               
+1
+Transporte                
+200.00                  
+1     
+Lazer                      
+150.00                    
+3                         
+12/10/2026             
+almoço                    
+45.90                      
+Alimentação                
+3                          
+12/10/2026                
+combustível               
+200.00                     
+Transporte                 
+5                          
+10                         
+2026                       
+0 
+```  
 
-OUT
-
-```
+OUT 
+```                    
 Resumo de Gastos - Outubro/2026
-
-Transporte ----------- R$ 200.00 (Limite: R$ 200.00)
-Alimentação ---------- R$ 45.90  (Limite: R$ 500.00)
-Lazer ---------------- R$ 0.00   (Limite: R$ 150.00)
+             
+Alimentação ---------- R$ 45.90  (Limite: R$ 500.00)                       
+Lazer ---------------- R$ 0.00   (Limite: R$ 150.00)                       
+Transporte ----------- R$ 200.00 (Limite: R$ 200.00) 
 ```
