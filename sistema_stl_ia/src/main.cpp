@@ -16,6 +16,8 @@ void mostrarMenu() {
     cout << "04. listar gastos" << endl;
     cout << "05. consultar total por categoria" << endl;
     cout << "06. listar maiores gastos do mês" << endl;
+    cout << "07. verificar limites" << endl;
+    cout << "08. alterar limite" << endl;
     cout << "09. excluir gasto" << endl;
     cout << "00. sair" << endl;
     cout << "Escolha uma opcao: ";
@@ -95,6 +97,34 @@ bool lerMesAno(int& mes, int& ano) {
     }
 }
 
+// Mês e ano de uma data "DD/MM/AAAA" já validada pela Carteira.
+int mesDaData(const string& data) {
+    return (data[3] - '0') * 10 + (data[4] - '0');
+}
+
+int anoDaData(const string& data) {
+    return (data[6] - '0') * 1000 + (data[7] - '0') * 100
+         + (data[8] - '0') * 10 + (data[9] - '0');
+}
+
+// O aviso de categoria estourada, usado pela opção 03 (logo após registrar)
+// e pela opção 07 (debaixo da categoria que passou do limite).
+void mostrarAvisoEstouro(Carteira& carteira, const string& categoria,
+                         int mes, int ano) {
+    const map<string, Categoria>& categorias = carteira.listarCategorias();
+    map<string, Categoria>::const_iterator achou =
+        categorias.find(Categoria::normalizar(categoria));
+    map<string, double> totais = carteira.totaisDoMes(mes, ano);
+    double total = totais.find(achou->second.getNome())->second;
+    double limite = achou->second.getLimite();
+
+    cout << fixed << setprecision(2);
+    cout << "ATENÇÃO: " << achou->second.getNome()
+         << " estourou o limite! Gasto: R$ " << total
+         << " - Limite: R$ " << limite
+         << " - Excedido: R$ " << (total - limite) << endl;
+}
+
 void opcaoCadastrarCategoria(Carteira& carteira) {
     string nome;
     string limiteTexto;
@@ -166,6 +196,11 @@ void opcaoRegistrarGasto(Carteira& carteira) {
     } else {
         cout << "Gasto registrado com o id " << carteira.ultimoId()
              << "!" << endl;
+        if (carteira.acimaDoLimite(categoria, mesDaData(data),
+                                   anoDaData(data))) {
+            mostrarAvisoEstouro(carteira, categoria, mesDaData(data),
+                                anoDaData(data));
+        }
     }
 }
 
@@ -264,6 +299,77 @@ void opcaoMaioresGastos(Carteira& carteira) {
     }
 }
 
+void opcaoVerificarLimites(Carteira& carteira) {
+    if (carteira.listarCategorias().empty()) {
+        cout << "Nenhuma categoria registrada" << endl;
+        return;
+    }
+
+    int mes = 0;
+    int ano = 0;
+    if (!lerMesAno(mes, ano)) {
+        return;
+    }
+
+    map<string, double> totais = carteira.totaisDoMes(mes, ano);
+
+    double soma = 0.0;
+    map<string, double>::const_iterator it;
+    for (it = totais.begin(); it != totais.end(); ++it) {
+        soma += it->second;
+    }
+
+    cout << endl;
+    if (soma == 0.0) {
+        cout << "Nenhum gasto registrado no período selecionado" << endl;
+        return;
+    }
+
+    const map<string, Categoria>& categorias = carteira.listarCategorias();
+    cout << fixed << setprecision(2);
+    for (it = totais.begin(); it != totais.end(); ++it) {
+        double limite = categorias.find(Categoria::normalizar(it->first))
+                            ->second.getLimite();
+        cout << it->first << " - Limite: R$ " << limite
+             << " - Utilizado: R$ " << it->second
+             << " - Disponível: R$ " << (limite - it->second) << endl;
+
+        if (carteira.acimaDoLimite(it->first, mes, ano)) {
+            mostrarAvisoEstouro(carteira, it->first, mes, ano);
+        }
+    }
+}
+
+void opcaoAlterarLimite(Carteira& carteira) {
+    if (carteira.listarCategorias().empty()) {
+        cout << "Nenhuma categoria registrada" << endl;
+        return;
+    }
+
+    string nome;
+    string limiteTexto;
+
+    cout << "Digite o nome da categoria: ";
+    getline(cin, nome);
+    cout << "Digite o novo limite: ";
+    getline(cin, limiteTexto);
+
+    double limite = 0.0;
+    if (!lerDouble(limiteTexto, limite)) {
+        cout << "Limite inválido!" << endl;
+        return;
+    }
+
+    int codigo = carteira.alterarLimite(nome, limite);
+    if (codigo == Carteira::LIMITE_INVALIDO) {
+        cout << "Limite inválido!" << endl;
+    } else if (codigo == Carteira::CATEGORIA_INEXISTENTE) {
+        cout << "Categoria Inexistente!" << endl;
+    } else {
+        cout << "Limite alterado com sucesso!" << endl;
+    }
+}
+
 void opcaoExcluirGasto(Carteira& carteira) {
     string idTexto;
 
@@ -316,6 +422,10 @@ int main() {
             opcaoTotalPorCategoria(carteira);
         } else if (opcao == "06") {
             opcaoMaioresGastos(carteira);
+        } else if (opcao == "07") {
+            opcaoVerificarLimites(carteira);
+        } else if (opcao == "08") {
+            opcaoAlterarLimite(carteira);
         } else if (opcao == "09") {
             opcaoExcluirGasto(carteira);
         } else if (opcao == "00") {
