@@ -1,6 +1,8 @@
 #include "Carteira.hpp"
 
 #include <algorithm>
+#include <functional>
+#include <set>
 #include <sstream>
 
 // Auxiliares que existem só neste arquivo: pegam o mês e o ano de uma
@@ -106,4 +108,37 @@ map<string, double> Carteira::totaisDoMes(int mes, int ano) const {
         totais[cat->second.getNome()] = total;
     }
     return totais;
+}
+
+map<string, vector<Gasto> > Carteira::gastosDoMesPorCategoria(int mes,
+                                                              int ano) const {
+    // Primeiro: quais categorias tiveram gasto no mês. O set não deixa
+    // repetir e já entrega os nomes em ordem alfabética.
+    set<string> comGasto;
+    for (vector<Gasto>::size_type i = 0; i < gastos.size(); ++i) {
+        const Gasto& gasto = gastos[i];
+        if (extrairMes(gasto.getData()) == mes
+                && extrairAno(gasto.getData()) == ano) {
+            comGasto.insert(gasto.getCategoria());
+        }
+    }
+
+    // Depois: junta os gastos de cada categoria do set e ordena do maior
+    // valor para o menor (no empate, a data mais recente vem primeiro).
+    map<string, vector<Gasto> > porCategoria;
+    set<string>::const_iterator nome;
+    for (nome = comGasto.begin(); nome != comGasto.end(); ++nome) {
+        vector<Gasto> doMes;
+        for (vector<Gasto>::size_type i = 0; i < gastos.size(); ++i) {
+            const Gasto& gasto = gastos[i];
+            if (extrairMes(gasto.getData()) == mes
+                    && extrairAno(gasto.getData()) == ano
+                    && gasto.getCategoria() == *nome) {
+                doMes.push_back(gasto);
+            }
+        }
+        sort(doMes.begin(), doMes.end(), greater<Gasto>());
+        porCategoria[*nome] = doMes;
+    }
+    return porCategoria;
 }
