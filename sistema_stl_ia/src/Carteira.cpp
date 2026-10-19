@@ -23,7 +23,7 @@ int Carteira::cadastrarCategoria(const string& nome, double limite) {
     if (nome.empty()) {
         return NOME_VAZIO;
     }
-    if (limite < 0) {
+    if (!limiteValido(limite)) {
         return LIMITE_INVALIDO;
     }
     string chave = Categoria::normalizar(nome);
@@ -46,21 +46,15 @@ int Carteira::registrarGasto(const string& data, const string& descricao,
     if (it == categorias.end()) {
         return CATEGORIA_INEXISTENTE;
     }
-    if (descricao.empty()) {
+    if (!descricaoValida(descricao)) {
         return DESCRICAO_VAZIA;
     }
     if (!Gasto::dataValida(data)) {
         return DATA_INVALIDA;
     }
 
-    istringstream stream(valorTexto);
     double valor = 0.0;
-    stream >> valor;
-    if (stream.fail() || valor <= 0.0) {
-        return VALOR_INVALIDO;
-    }
-    stream >> ws;
-    if (!stream.eof()) {
+    if (!valorValido(valorTexto, valor)) {
         return VALOR_INVALIDO;
     }
 
@@ -166,7 +160,7 @@ bool Carteira::acimaDoLimite(const string& categoria, int mes,
 }
 
 int Carteira::alterarLimite(const string& nome, double novoLimite) {
-    if (novoLimite < 0) {
+    if (!limiteValido(novoLimite)) {
         return LIMITE_INVALIDO;
     }
     map<string, Categoria>::iterator it =
@@ -176,4 +170,26 @@ int Carteira::alterarLimite(const string& nome, double novoLimite) {
     }
     it->second.setLimite(novoLimite);
     return OK;
+}
+
+bool Carteira::categoriaExiste(const string& nome) const {
+    return categorias.find(Categoria::normalizar(nome)) != categorias.end();
+}
+
+bool Carteira::descricaoValida(const string& descricao) {
+    return !descricao.empty();
+}
+
+bool Carteira::valorValido(const string& valorTexto, double& valor) {
+    istringstream stream(valorTexto);
+    stream >> valor;
+    if (stream.fail() || valor <= 0.0) {
+        return false;
+    }
+    stream >> ws;
+    return stream.eof();
+}
+
+bool Carteira::limiteValido(double limite) {
+    return limite >= 0;
 }
