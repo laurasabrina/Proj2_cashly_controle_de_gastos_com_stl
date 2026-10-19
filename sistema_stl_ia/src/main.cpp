@@ -169,6 +169,26 @@ void opcaoListarCategorias(Carteira& carteira) {
 }
 
 void opcaoRegistrarGasto(Carteira& carteira) {
+    if (carteira.listarCategorias().empty()) {
+        cout << "Nenhuma categoria registrada" << endl;
+        while (true) {
+            cout << "Deseja cadastrar uma categoria? (s/n): ";
+            string resposta;
+            getline(cin, resposta);
+            if (!cin) {
+                return;
+            }
+            if (resposta == "s" || resposta == "S") {
+                opcaoCadastrarCategoria(carteira);
+                return;
+            }
+            if (resposta == "n" || resposta == "N") {
+                cout << "Ate logo!" << endl;
+                exit(0);
+            }
+        }
+    }
+
     string data;
     string descricao;
     string valorTexto;
@@ -288,13 +308,15 @@ void opcaoMaioresGastos(Carteira& carteira) {
     cout << fixed << setprecision(2);
     map<string, vector<Gasto> >::const_iterator it;
     for (it = porCategoria.begin(); it != porCategoria.end(); ++it) {
+        if (it != porCategoria.begin()) {
+            cout << endl;
+        }
         cout << it->first << ":" << endl;
         const vector<Gasto>& doMes = it->second;
         for (vector<Gasto>::size_type i = 0; i < doMes.size(); ++i) {
             const Gasto& gasto = doMes[i];
-            cout << gasto.getId() << " | " << gasto.getData() << " | "
-                 << gasto.getDescricao() << " | R$ " << gasto.getValor()
-                 << " | " << gasto.getCategoria() << endl;
+            cout << gasto.getData() << " | " << gasto.getDescricao()
+                 << " | R$ " << gasto.getValor() << endl;
         }
     }
 }
