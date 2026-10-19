@@ -32,6 +32,8 @@ public:
     map<string, double> totaisDoMes(int mes, int ano) const;
     map<string, vector<Gasto> > gastosDoMesPorCategoria(int mes,
                                                         int ano) const;
+    bool acimaDoLimite(const string& categoria, int mes, int ano) const;
+    int alterarLimite(const string& nome, double novoLimite);
     int ultimoId() const;
 
 private:
