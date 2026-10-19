@@ -95,11 +95,12 @@ Escolha uma opcao: Digite a data: Digite a descrição: Digite o valor: Digite a
 00. sair
 Escolha uma opcao: Digite o mês: Digite o ano: 
 Alimentação:
-3 | 25/10/2026 | feira | R$ 120.00 | Alimentação
-2 | 20/10/2026 | mercado | R$ 45.90 | Alimentação
-1 | 05/10/2026 | restaurante | R$ 45.90 | Alimentação
+25/10/2026 | feira | R$ 120.00
+20/10/2026 | mercado | R$ 45.90
+05/10/2026 | restaurante | R$ 45.90
+
 Lazer:
-4 | 08/10/2026 | cinema | R$ 30.00 | Lazer
+08/10/2026 | cinema | R$ 30.00
 ===== Cashly =====
 01. cadastrar categoria
 02. listar categorias
@@ -113,7 +114,7 @@ Lazer:
 00. sair
 Escolha uma opcao: Digite o mês: Digite o ano: 
 Lazer:
-5 | 15/09/2026 | show | R$ 80.00 | Lazer
+15/09/2026 | show | R$ 80.00
 ===== Cashly =====
 01. cadastrar categoria
 02. listar categorias
