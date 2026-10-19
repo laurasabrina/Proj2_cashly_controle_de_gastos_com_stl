@@ -91,3 +91,9 @@ bool Gasto::operator<(const Gasto& outro) const {
     }
     return data < outro.data;
 }
+
+// O std::greater<Gasto>() do sort compara com ">", então o Gasto precisa
+// dele também. "a > b" é o mesmo que "b < a".
+bool Gasto::operator>(const Gasto& outro) const {
+    return outro < *this;
+}
