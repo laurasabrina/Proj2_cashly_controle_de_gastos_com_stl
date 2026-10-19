@@ -127,29 +127,39 @@ void mostrarAvisoEstouro(Carteira& carteira, const string& categoria,
 
 void opcaoCadastrarCategoria(Carteira& carteira) {
     string nome;
+    while (true) {
+        cout << "Digite o nome da categoria: ";
+        getline(cin, nome);
+        if (!cin) {
+            return;
+        }
+        if (nome.empty()) {
+            cout << "Nome de categoria vazio!" << endl;
+            continue;
+        }
+        if (carteira.categoriaExiste(nome)) {
+            cout << "Categoria já cadastrada!" << endl;
+            continue;
+        }
+        break;
+    }
+
     string limiteTexto;
-
-    cout << "Digite o nome da categoria: ";
-    getline(cin, nome);
-    cout << "Digite o limite mensal: ";
-    getline(cin, limiteTexto);
-
     double limite = 0.0;
-    if (!lerDouble(limiteTexto, limite)) {
+    while (true) {
+        cout << "Digite o limite mensal: ";
+        getline(cin, limiteTexto);
+        if (!cin) {
+            return;
+        }
+        if (lerDouble(limiteTexto, limite) && Carteira::limiteValido(limite)) {
+            break;
+        }
         cout << "Limite inválido!" << endl;
-        return;
     }
 
-    int codigo = carteira.cadastrarCategoria(nome, limite);
-    if (codigo == Carteira::NOME_VAZIO) {
-        cout << "Nome de categoria vazio!" << endl;
-    } else if (codigo == Carteira::LIMITE_INVALIDO) {
-        cout << "Limite inválido!" << endl;
-    } else if (codigo == Carteira::CATEGORIA_DUPLICADA) {
-        cout << "Categoria já cadastrada!" << endl;
-    } else {
-        cout << "Categoria cadastrada com sucesso!" << endl;
-    }
+    carteira.cadastrarCategoria(nome, limite);
+    cout << "Categoria cadastrada com sucesso!" << endl;
 }
 
 void opcaoListarCategorias(Carteira& carteira) {
@@ -190,37 +200,65 @@ void opcaoRegistrarGasto(Carteira& carteira) {
     }
 
     string data;
-    string descricao;
-    string valorTexto;
-    string categoria;
-
-    cout << "Digite a data: ";
-    getline(cin, data);
-    cout << "Digite a descrição: ";
-    getline(cin, descricao);
-    cout << "Digite o valor: ";
-    getline(cin, valorTexto);
-    cout << "Digite a categoria: ";
-    getline(cin, categoria);
-
-    int codigo = carteira.registrarGasto(data, descricao, valorTexto,
-                                         categoria);
-    if (codigo == Carteira::CATEGORIA_INEXISTENTE) {
-        cout << "Categoria Inexistente!" << endl;
-    } else if (codigo == Carteira::DESCRICAO_VAZIA) {
-        cout << "Descrição vazia!" << endl;
-    } else if (codigo == Carteira::DATA_INVALIDA) {
-        cout << "Data inválida!" << endl;
-    } else if (codigo == Carteira::VALOR_INVALIDO) {
-        cout << "Valor inválido!" << endl;
-    } else {
-        cout << "Gasto registrado com o id " << carteira.ultimoId()
-             << "!" << endl;
-        if (carteira.acimaDoLimite(categoria, mesDaData(data),
-                                   anoDaData(data))) {
-            mostrarAvisoEstouro(carteira, categoria, mesDaData(data),
-                                anoDaData(data));
+    while (true) {
+        cout << "Digite a data: ";
+        getline(cin, data);
+        if (!cin) {
+            return;
         }
+        if (Gasto::dataValida(data)) {
+            break;
+        }
+        cout << "Data inválida!" << endl;
+    }
+
+    string descricao;
+    while (true) {
+        cout << "Digite a descrição: ";
+        getline(cin, descricao);
+        if (!cin) {
+            return;
+        }
+        if (Carteira::descricaoValida(descricao)) {
+            break;
+        }
+        cout << "Descrição vazia!" << endl;
+    }
+
+    string valorTexto;
+    double valor = 0.0;
+    while (true) {
+        cout << "Digite o valor: ";
+        getline(cin, valorTexto);
+        if (!cin) {
+            return;
+        }
+        if (Carteira::valorValido(valorTexto, valor)) {
+            break;
+        }
+        cout << "Valor inválido!" << endl;
+    }
+
+    string categoria;
+    while (true) {
+        cout << "Digite a categoria: ";
+        getline(cin, categoria);
+        if (!cin) {
+            return;
+        }
+        if (carteira.categoriaExiste(categoria)) {
+            break;
+        }
+        cout << "Categoria Inexistente!" << endl;
+    }
+
+    carteira.registrarGasto(data, descricao, valorTexto, categoria);
+    cout << "Gasto registrado com o id " << carteira.ultimoId()
+         << "!" << endl;
+    if (carteira.acimaDoLimite(categoria, mesDaData(data),
+                               anoDaData(data))) {
+        mostrarAvisoEstouro(carteira, categoria, mesDaData(data),
+                            anoDaData(data));
     }
 }
 
@@ -369,27 +407,34 @@ void opcaoAlterarLimite(Carteira& carteira) {
     }
 
     string nome;
-    string limiteTexto;
-
-    cout << "Digite o nome da categoria: ";
-    getline(cin, nome);
-    cout << "Digite o novo limite: ";
-    getline(cin, limiteTexto);
-
-    double limite = 0.0;
-    if (!lerDouble(limiteTexto, limite)) {
-        cout << "Limite inválido!" << endl;
-        return;
-    }
-
-    int codigo = carteira.alterarLimite(nome, limite);
-    if (codigo == Carteira::LIMITE_INVALIDO) {
-        cout << "Limite inválido!" << endl;
-    } else if (codigo == Carteira::CATEGORIA_INEXISTENTE) {
+    while (true) {
+        cout << "Digite o nome da categoria: ";
+        getline(cin, nome);
+        if (!cin) {
+            return;
+        }
+        if (carteira.categoriaExiste(nome)) {
+            break;
+        }
         cout << "Categoria Inexistente!" << endl;
-    } else {
-        cout << "Limite alterado com sucesso!" << endl;
     }
+
+    string limiteTexto;
+    double limite = 0.0;
+    while (true) {
+        cout << "Digite o novo limite: ";
+        getline(cin, limiteTexto);
+        if (!cin) {
+            return;
+        }
+        if (lerDouble(limiteTexto, limite) && Carteira::limiteValido(limite)) {
+            break;
+        }
+        cout << "Limite inválido!" << endl;
+    }
+
+    carteira.alterarLimite(nome, limite);
+    cout << "Limite alterado com sucesso!" << endl;
 }
 
 void opcaoExcluirGasto(Carteira& carteira) {
