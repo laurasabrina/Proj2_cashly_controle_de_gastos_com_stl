@@ -4,6 +4,7 @@
 03. registrar gasto
 04. listar gastos
 05. consultar total por categoria
+06. listar maiores gastos do mês
 09. excluir gasto
 00. sair
 Escolha uma opcao: Digite o nome da categoria: Digite o limite mensal: Categoria cadastrada com sucesso!
@@ -13,6 +14,7 @@ Escolha uma opcao: Digite o nome da categoria: Digite o limite mensal: Categoria
 03. registrar gasto
 04. listar gastos
 05. consultar total por categoria
+06. listar maiores gastos do mês
 09. excluir gasto
 00. sair
 Escolha uma opcao: Digite o nome da categoria: Digite o limite mensal: Categoria cadastrada com sucesso!
@@ -22,6 +24,7 @@ Escolha uma opcao: Digite o nome da categoria: Digite o limite mensal: Categoria
 03. registrar gasto
 04. listar gastos
 05. consultar total por categoria
+06. listar maiores gastos do mês
 09. excluir gasto
 00. sair
 Escolha uma opcao: Digite o nome da categoria: Digite o limite mensal: Categoria cadastrada com sucesso!
@@ -31,6 +34,7 @@ Escolha uma opcao: Digite o nome da categoria: Digite o limite mensal: Categoria
 03. registrar gasto
 04. listar gastos
 05. consultar total por categoria
+06. listar maiores gastos do mês
 09. excluir gasto
 00. sair
 Escolha uma opcao: Digite a data: Digite a descrição: Digite o valor: Digite a categoria: Gasto registrado com o id 1!
@@ -40,6 +44,7 @@ Escolha uma opcao: Digite a data: Digite a descrição: Digite o valor: Digite a
 03. registrar gasto
 04. listar gastos
 05. consultar total por categoria
+06. listar maiores gastos do mês
 09. excluir gasto
 00. sair
 Escolha uma opcao: Digite a data: Digite a descrição: Digite o valor: Digite a categoria: Gasto registrado com o id 2!
@@ -49,6 +54,7 @@ Escolha uma opcao: Digite a data: Digite a descrição: Digite o valor: Digite a
 03. registrar gasto
 04. listar gastos
 05. consultar total por categoria
+06. listar maiores gastos do mês
 09. excluir gasto
 00. sair
 Escolha uma opcao: Digite o mês: Digite o ano: 
@@ -63,6 +69,7 @@ Transporte ----------- R$ 200.00 (Limite: R$ 200.00)
 03. registrar gasto
 04. listar gastos
 05. consultar total por categoria
+06. listar maiores gastos do mês
 09. excluir gasto
 00. sair
 Escolha uma opcao: Ate logo!
