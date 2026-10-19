@@ -36,6 +36,11 @@ public:
     int alterarLimite(const string& nome, double novoLimite);
     int ultimoId() const;
 
+    bool categoriaExiste(const string& nome) const;
+    static bool descricaoValida(const string& descricao);
+    static bool valorValido(const string& valorTexto, double& valor);
+    static bool limiteValido(double limite);
+
 private:
     vector<Gasto> gastos;
     map<string, Categoria> categorias;
