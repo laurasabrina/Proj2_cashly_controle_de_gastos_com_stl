@@ -9,7 +9,8 @@
 08. alterar limite
 09. excluir gasto
 00. sair
-Escolha uma opcao: Digite o nome da categoria: Digite o limite mensal: Categoria cadastrada com sucesso!
+Escolha uma opcao: Digite o nome da categoria: Nome de categoria vazio!
+Digite o nome da categoria: Digite o limite mensal: Categoria cadastrada com sucesso!
 ===== Cashly =====
 01. cadastrar categoria
 02. listar categorias
@@ -21,7 +22,8 @@ Escolha uma opcao: Digite o nome da categoria: Digite o limite mensal: Categoria
 08. alterar limite
 09. excluir gasto
 00. sair
-Escolha uma opcao: Digite o nome da categoria: Digite o limite mensal: Categoria cadastrada com sucesso!
+Escolha uma opcao: Digite o nome da categoria: Categoria já cadastrada!
+Digite o nome da categoria: Digite o limite mensal: Categoria cadastrada com sucesso!
 ===== Cashly =====
 01. cadastrar categoria
 02. listar categorias
@@ -33,7 +35,13 @@ Escolha uma opcao: Digite o nome da categoria: Digite o limite mensal: Categoria
 08. alterar limite
 09. excluir gasto
 00. sair
-Escolha uma opcao: Digite a data: Digite a descrição: Digite o valor: Digite a categoria: Gasto registrado com o id 1!
+Escolha uma opcao: Digite a data: Data inválida!
+Digite a data: Data inválida!
+Digite a data: Digite a descrição: Descrição vazia!
+Digite a descrição: Digite o valor: Valor inválido!
+Digite o valor: Digite a categoria: Categoria Inexistente!
+Digite a categoria: Gasto registrado com o id 1!
+ATENÇÃO: Alimentação estourou o limite! Gasto: R$ 600.00 - Limite: R$ 500.00 - Excedido: R$ 100.00
 ===== Cashly =====
 01. cadastrar categoria
 02. listar categorias
@@ -45,8 +53,9 @@ Escolha uma opcao: Digite a data: Digite a descrição: Digite o valor: Digite a
 08. alterar limite
 09. excluir gasto
 00. sair
-Escolha uma opcao: Digite a data: Digite a descrição: Digite o valor: Digite a categoria: Gasto registrado com o id 2!
-ATENÇÃO: Alimentação estourou o limite! Gasto: R$ 645.90 - Limite: R$ 500.00 - Excedido: R$ 145.90
+Escolha uma opcao: Digite o nome da categoria: Categoria Inexistente!
+Digite o nome da categoria: Digite o novo limite: Limite inválido!
+Digite o novo limite: Limite alterado com sucesso!
 ===== Cashly =====
 01. cadastrar categoria
 02. listar categorias
@@ -59,72 +68,9 @@ ATENÇÃO: Alimentação estourou o limite! Gasto: R$ 645.90 - Limite: R$ 500.00
 09. excluir gasto
 00. sair
 Escolha uma opcao: Digite o mês: Digite o ano: 
-Alimentação - Limite: R$ 500.00 - Utilizado: R$ 645.90 - Disponível: R$ -145.90
-ATENÇÃO: Alimentação estourou o limite! Gasto: R$ 645.90 - Limite: R$ 500.00 - Excedido: R$ 145.90
+Alimentação - Limite: R$ 100.00 - Utilizado: R$ 600.00 - Disponível: R$ -500.00
+ATENÇÃO: Alimentação estourou o limite! Gasto: R$ 600.00 - Limite: R$ 100.00 - Excedido: R$ 500.00
 Lazer - Limite: R$ 150.00 - Utilizado: R$ 0.00 - Disponível: R$ 150.00
-===== Cashly =====
-01. cadastrar categoria
-02. listar categorias
-03. registrar gasto
-04. listar gastos
-05. consultar total por categoria
-06. listar maiores gastos do mês
-07. verificar limites
-08. alterar limite
-09. excluir gasto
-00. sair
-Escolha uma opcao: Digite o nome da categoria: Digite o novo limite: Limite alterado com sucesso!
-===== Cashly =====
-01. cadastrar categoria
-02. listar categorias
-03. registrar gasto
-04. listar gastos
-05. consultar total por categoria
-06. listar maiores gastos do mês
-07. verificar limites
-08. alterar limite
-09. excluir gasto
-00. sair
-Escolha uma opcao: Digite o nome da categoria: Digite o novo limite: Categoria Inexistente!
-===== Cashly =====
-01. cadastrar categoria
-02. listar categorias
-03. registrar gasto
-04. listar gastos
-05. consultar total por categoria
-06. listar maiores gastos do mês
-07. verificar limites
-08. alterar limite
-09. excluir gasto
-00. sair
-Escolha uma opcao: Digite o nome da categoria: Digite o novo limite: Limite inválido!
-===== Cashly =====
-01. cadastrar categoria
-02. listar categorias
-03. registrar gasto
-04. listar gastos
-05. consultar total por categoria
-06. listar maiores gastos do mês
-07. verificar limites
-08. alterar limite
-09. excluir gasto
-00. sair
-Escolha uma opcao: Digite o nome da categoria: Digite o novo limite: Limite alterado com sucesso!
-===== Cashly =====
-01. cadastrar categoria
-02. listar categorias
-03. registrar gasto
-04. listar gastos
-05. consultar total por categoria
-06. listar maiores gastos do mês
-07. verificar limites
-08. alterar limite
-09. excluir gasto
-00. sair
-Escolha uma opcao: Digite o mês: Digite o ano: 
-Alimentação - Limite: R$ 100.00 - Utilizado: R$ 645.90 - Disponível: R$ -545.90
-ATENÇÃO: Alimentação estourou o limite! Gasto: R$ 645.90 - Limite: R$ 100.00 - Excedido: R$ 545.90
-Lazer - Limite: R$ 100.00 - Utilizado: R$ 0.00 - Disponível: R$ 100.00
 ===== Cashly =====
 01. cadastrar categoria
 02. listar categorias
