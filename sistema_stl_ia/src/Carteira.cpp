@@ -142,3 +142,38 @@ map<string, vector<Gasto> > Carteira::gastosDoMesPorCategoria(int mes,
     }
     return porCategoria;
 }
+
+bool Carteira::acimaDoLimite(const string& categoria, int mes,
+                             int ano) const {
+    map<string, Categoria>::const_iterator it =
+        categorias.find(Categoria::normalizar(categoria));
+    if (it == categorias.end()) {
+        return false;
+    }
+
+    double total = 0.0;
+    for (vector<Gasto>::size_type i = 0; i < gastos.size(); ++i) {
+        const Gasto& gasto = gastos[i];
+        if (extrairMes(gasto.getData()) == mes
+                && extrairAno(gasto.getData()) == ano
+                && Categoria::normalizar(gasto.getCategoria()) == it->first) {
+            total += gasto.getValor();
+        }
+    }
+
+    // Só é "acima" quando passa do limite; igual ao limite não conta.
+    return total > it->second.getLimite();
+}
+
+int Carteira::alterarLimite(const string& nome, double novoLimite) {
+    if (novoLimite < 0) {
+        return LIMITE_INVALIDO;
+    }
+    map<string, Categoria>::iterator it =
+        categorias.find(Categoria::normalizar(nome));
+    if (it == categorias.end()) {
+        return CATEGORIA_INEXISTENTE;
+    }
+    it->second.setLimite(novoLimite);
+    return OK;
+}
