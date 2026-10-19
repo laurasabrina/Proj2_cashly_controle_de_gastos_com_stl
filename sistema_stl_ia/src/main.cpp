@@ -15,6 +15,7 @@ void mostrarMenu() {
     cout << "03. registrar gasto" << endl;
     cout << "04. listar gastos" << endl;
     cout << "05. consultar total por categoria" << endl;
+    cout << "06. listar maiores gastos do mês" << endl;
     cout << "09. excluir gasto" << endl;
     cout << "00. sair" << endl;
     cout << "Escolha uma opcao: ";
@@ -59,6 +60,39 @@ string nomeMes(int mes) {
                                   "Setembro", "Outubro", "Novembro",
                                   "Dezembro"};
     return nomes[mes - 1];
+}
+
+// Lê mês e ano e repete enquanto o valor não for válido. Devolve false se o
+// usuário responder "n" (ou se a entrada acabar) e aí a opção desiste.
+bool lerMesAno(int& mes, int& ano) {
+    while (true) {
+        string mesTexto;
+        string anoTexto;
+
+        cout << "Digite o mês: ";
+        getline(cin, mesTexto);
+        cout << "Digite o ano: ";
+        getline(cin, anoTexto);
+        if (!cin) {
+            return false;
+        }
+
+        if (lerInteiro(mesTexto, mes) && lerInteiro(anoTexto, ano)
+                && mes >= 1 && mes <= 12 && ano >= 1) {
+            return true;
+        }
+
+        cout << "Opção inválida!" << endl;
+        cout << "Deseja digitar um valor válido? (s/n): ";
+        string resposta;
+        getline(cin, resposta);
+        if (!cin) {
+            return false;
+        }
+        if (resposta != "s" && resposta != "S") {
+            return false;
+        }
+    }
 }
 
 void opcaoCadastrarCategoria(Carteira& carteira) {
@@ -159,33 +193,8 @@ void opcaoTotalPorCategoria(Carteira& carteira) {
 
     int mes = 0;
     int ano = 0;
-    while (true) {
-        string mesTexto;
-        string anoTexto;
-
-        cout << "Digite o mês: ";
-        getline(cin, mesTexto);
-        cout << "Digite o ano: ";
-        getline(cin, anoTexto);
-        if (!cin) {
-            return;
-        }
-
-        if (lerInteiro(mesTexto, mes) && lerInteiro(anoTexto, ano)
-                && mes >= 1 && mes <= 12 && ano >= 1) {
-            break;
-        }
-
-        cout << "Opção inválida!" << endl;
-        cout << "Deseja digitar um valor válido? (s/n): ";
-        string resposta;
-        getline(cin, resposta);
-        if (!cin) {
-            return;
-        }
-        if (resposta != "s" && resposta != "S") {
-            return;
-        }
+    if (!lerMesAno(mes, ano)) {
+        return;
     }
 
     map<string, double> totais = carteira.totaisDoMes(mes, ano);
@@ -217,6 +226,41 @@ void opcaoTotalPorCategoria(Carteira& carteira) {
             categorias.find(Categoria::normalizar(it->first));
         cout << " R$ " << left << setw(7) << it->second << right
              << "(Limite: R$ " << achou->second.getLimite() << ")" << endl;
+    }
+}
+
+void opcaoMaioresGastos(Carteira& carteira) {
+    if (carteira.listarCategorias().empty()) {
+        cout << "Nenhuma categoria registrada" << endl;
+        return;
+    }
+
+    int mes = 0;
+    int ano = 0;
+    if (!lerMesAno(mes, ano)) {
+        return;
+    }
+
+    map<string, vector<Gasto> > porCategoria =
+        carteira.gastosDoMesPorCategoria(mes, ano);
+    if (porCategoria.empty()) {
+        cout << endl;
+        cout << "Nenhum gasto registrado no período selecionado" << endl;
+        return;
+    }
+
+    cout << endl;
+    cout << fixed << setprecision(2);
+    map<string, vector<Gasto> >::const_iterator it;
+    for (it = porCategoria.begin(); it != porCategoria.end(); ++it) {
+        cout << it->first << ":" << endl;
+        const vector<Gasto>& doMes = it->second;
+        for (vector<Gasto>::size_type i = 0; i < doMes.size(); ++i) {
+            const Gasto& gasto = doMes[i];
+            cout << gasto.getId() << " | " << gasto.getData() << " | "
+                 << gasto.getDescricao() << " | R$ " << gasto.getValor()
+                 << " | " << gasto.getCategoria() << endl;
+        }
     }
 }
 
@@ -270,6 +314,8 @@ int main() {
             opcaoListarGastos(carteira);
         } else if (opcao == "05") {
             opcaoTotalPorCategoria(carteira);
+        } else if (opcao == "06") {
+            opcaoMaioresGastos(carteira);
         } else if (opcao == "09") {
             opcaoExcluirGasto(carteira);
         } else if (opcao == "00") {
