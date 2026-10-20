@@ -1,4 +1,4 @@
-# Nome do sistema
+# Cashly - controle de gastos com STL
 
 Atividade da Unidade 2 de Linguagem de Programação I. Leia `ENUNCIADO.md`
 antes de começar.
